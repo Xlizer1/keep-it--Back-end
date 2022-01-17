@@ -17,15 +17,15 @@ var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 
 var _UserModel = _interopRequireDefault(require("./models/UserModel"));
 
-var _PostModel = _interopRequireDefault(require("./models/PostModel"));
+var _NoteModel = _interopRequireDefault(require("./models/NoteModel"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const setupRoutes = app => {
-  app.get('/posts', async (req, res) => {
+  app.get('/notes', async (req, res) => {
     try {
-      const posts = await _PostModel.default.find({});
-      return res.json(posts);
+      const notes = await _NoteModel.default.find({});
+      return res.json(notes);
     } catch (error) {
       res.statusCode = 500;
       console.log(error);
@@ -102,19 +102,19 @@ const setupRoutes = app => {
       }
     }
   });
-  app.post('/post/new', async (req, res) => {
+  app.post('/note/new', async (req, res) => {
     const {
       title,
       description
     } = req.body;
 
     try {
-      const newPost = new _PostModel.default({
+      const newNote = new _NoteModel.default({
         title,
         description
       });
-      await newPost.save();
-      res.send(newPost);
+      await newNote.save();
+      res.send(newNote);
     } catch (error) {
       res.send(error.message);
     }

@@ -2,16 +2,16 @@ import Joi from 'joi'
 import { hashPassword } from './Helper/Helper.js'
 import jwt from 'jsonwebtoken'
 import UserModel from './models/UserModel'
-import PostModel from './models/PostModel'
+import NoteModel from './models/NoteModel'
 
 const setupRoutes = (app) => {
    
-   app.get('/posts', async(req, res) => {
+   app.get('/notes', async(req, res) => {
 
       try {
-         const posts = await PostModel.find({});
+         const notes = await NoteModel.find({});
          
-         return res.json(posts);
+         return res.json(notes);
          
       } catch (error) {
 
@@ -83,18 +83,18 @@ const setupRoutes = (app) => {
       }
    });
 
-   app.post('/post/new', async (req,res) => {
+   app.post('/note/new', async (req,res) => {
       const { title, description } = req.body;
 
       try {
-         const newPost = new PostModel({
+         const newNote = new NoteModel({
             title,
             description,
          });
 
-         await newPost.save();
+         await newNote.save();
 
-         res.send(newPost);
+         res.send(newNote);
 
       } catch (error){
          res.send(error.message);
