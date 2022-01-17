@@ -7,8 +7,6 @@ exports.default = void 0;
 
 require("core-js/modules/es.promise.js");
 
-require("core-js/modules/es.symbol.description.js");
-
 var _joi = _interopRequireDefault(require("joi"));
 
 var _Helper = require("./Helper/Helper.js");
@@ -112,13 +110,13 @@ const setupRoutes = app => {
   app.post('/note/new', async (req, res) => {
     const {
       title,
-      description
+      content
     } = req.body;
 
     try {
       const newNote = new _NoteModel.default({
         title,
-        description
+        content
       });
       await newNote.save();
       res.send(newNote);

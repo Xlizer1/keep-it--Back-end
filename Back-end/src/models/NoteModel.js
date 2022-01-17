@@ -2,9 +2,9 @@ import { Schema, model } from "mongoose";
 
 const noteSchema = new Schema({
     title: String,
-    description: String
+    content: String
 })
 
-const noteModel = model('notes', noteSchema)
+const NoteModel = model('notes', noteSchema)
 
-export default noteModel;
+export default NoteModel;

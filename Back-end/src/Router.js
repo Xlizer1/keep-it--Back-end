@@ -88,12 +88,12 @@ const setupRoutes = (app) => {
    });
 
    app.post('/note/new', async (req,res) => {
-      const { title, description } = req.body;
+      const { title, content } = req.body;
 
       try {
          const newNote = new NoteModel({
             title,
-            description,
+            content,
          });
 
          await newNote.save();

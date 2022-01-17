@@ -9,8 +9,8 @@ var _mongoose = require("mongoose");
 
 const noteSchema = new _mongoose.Schema({
   title: String,
-  description: String
+  content: String
 });
-const noteModel = (0, _mongoose.model)('notes', noteSchema);
-var _default = noteModel;
+const NoteModel = (0, _mongoose.model)('notes', noteSchema);
+var _default = NoteModel;
 exports.default = _default;
