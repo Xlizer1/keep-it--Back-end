@@ -3,9 +3,13 @@ import { hashPassword } from './Helper/Helper.js'
 import jwt from 'jsonwebtoken'
 import UserModel from './models/UserModel'
 import NoteModel from './models/NoteModel'
+import cors from "cors"
 
 const setupRoutes = (app) => {
-   
+   app.use(cors(
+      { origin: '*' ,
+      methods: ['GET', 'POST', 'PUT', 'DELETE'],
+      allowedHeaders: ['Content-Type']}))
    app.get('/notes', async(req, res) => {
 
       try {

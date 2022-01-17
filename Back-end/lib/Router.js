@@ -19,9 +19,16 @@ var _UserModel = _interopRequireDefault(require("./models/UserModel"));
 
 var _NoteModel = _interopRequireDefault(require("./models/NoteModel"));
 
+var _cors = _interopRequireDefault(require("cors"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const setupRoutes = app => {
+  app.use((0, _cors.default)({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type']
+  }));
   app.get('/notes', async (req, res) => {
     try {
       const notes = await _NoteModel.default.find({});
