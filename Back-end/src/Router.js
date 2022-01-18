@@ -90,7 +90,6 @@ const setupRoutes = (app) => {
    // ADD NEW NOTE
    app.post('/note/new', async (req,res) => {
       const { title, content } = req.body;
-
       try {
          const newNote = new NoteModel({
             title,
