@@ -26,7 +26,8 @@ const setupRoutes = app => {
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type']
-  }));
+  })); // GET NOTES
+
   app.get('/notes', async (req, res) => {
     try {
       const notes = await _NoteModel.default.find({});
@@ -35,7 +36,8 @@ const setupRoutes = app => {
       res.statusCode = 500;
       console.log(error);
     }
-  });
+  }); // REGISTER NEW USER
+
   app.post('/user/register', async (req, res) => {
     const {
       name,
@@ -79,7 +81,8 @@ const setupRoutes = app => {
       res.send(error.message);
     }
   });
-  app.get('*', (req, res) => res.send("URL Not Found"));
+  app.get('*', (req, res) => res.send("URL Not Found")); // LOGIN USER
+
   app.post('/user/login', async (req, res) => {
     const {
       email,
@@ -106,7 +109,8 @@ const setupRoutes = app => {
         res.send('password is wrong');
       }
     }
-  });
+  }); // ADD NEW NOTE
+
   app.post('/note/new', async (req, res) => {
     const {
       title,
@@ -122,6 +126,28 @@ const setupRoutes = app => {
       res.send(newNote);
     } catch (error) {
       res.send(error.message);
+    }
+  }); // DELETE NOTE
+
+  app.delete("/notes/:id", async (req, res) => {
+    const {
+      id
+    } = req.params;
+    const noteToDelete = await _NoteModel.default.findById(id);
+
+    if (!noteToDelete) {
+      res.send("NOTE NOT FOUND");
+      return;
+    }
+
+    try {
+      await _NoteModel.default.deleteOne({
+        '_id': id
+      });
+      res.send('Note is Deleted');
+    } catch (error) {
+      res.send(error.message);
+      console.log("Erron deleting note");
     }
   });
 };
