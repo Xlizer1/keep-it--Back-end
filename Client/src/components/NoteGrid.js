@@ -9,7 +9,7 @@ export default class NoteGrid extends Component {
         return (
             <div className='note-grid'>
                 {this.props.notes?this.props.notes.map((note,index)=>{
-                    return <Note key={index} id={note._id} title={note.title} content={note.content} img={note.image} updateDelete={updateDelete}/>
+                    return <Note key={index} id={index} title={note.title} content={note.content} img={note.image} updateDelete={updateDelete}/>
                 }):null}
             </div>
         )

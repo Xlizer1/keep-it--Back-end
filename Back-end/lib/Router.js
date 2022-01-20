@@ -7,6 +7,8 @@ exports.default = void 0;
 
 require("core-js/modules/es.promise.js");
 
+require("core-js/modules/es.symbol.description.js");
+
 var _joi = _interopRequireDefault(require("joi"));
 
 var _Helper = require("./Helper/Helper.js");
@@ -15,29 +17,20 @@ var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 
 var _UserModel = _interopRequireDefault(require("./models/UserModel"));
 
-var _NoteModel = _interopRequireDefault(require("./models/NoteModel"));
-
-var _cors = _interopRequireDefault(require("cors"));
+var _PostModel = _interopRequireDefault(require("./models/PostModel"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const setupRoutes = app => {
-  app.use((0, _cors.default)({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type']
-  })); // GET NOTES
-
-  app.get('/notes', async (req, res) => {
+  app.get('/posts', async (req, res) => {
     try {
-      const notes = await _NoteModel.default.find({});
-      return res.json(notes);
+      const posts = await _PostModel.default.find({});
+      return res.json(posts);
     } catch (error) {
       res.statusCode = 500;
       console.log(error);
     }
-  }); // REGISTER NEW USER
-
+  });
   app.post('/user/register', async (req, res) => {
     const {
       name,
@@ -81,8 +74,7 @@ const setupRoutes = app => {
       res.send(error.message);
     }
   });
-  app.get('*', (req, res) => res.send("URL Not Found")); // LOGIN USER
-
+  app.get('*', (req, res) => res.send("URL Not Found"));
   app.post('/user/login', async (req, res) => {
     const {
       email,
@@ -109,45 +101,22 @@ const setupRoutes = app => {
         res.send('password is wrong');
       }
     }
-  }); // ADD NEW NOTE
-
-  app.post('/note/new', async (req, res) => {
+  });
+  app.post('/post/new', async (req, res) => {
     const {
       title,
-      content
+      description
     } = req.body;
 
     try {
-      const newNote = new _NoteModel.default({
+      const newPost = new _PostModel.default({
         title,
-        content
+        description
       });
-      await newNote.save();
-      res.send(newNote);
+      await newPost.save();
+      res.send(newPost);
     } catch (error) {
       res.send(error.message);
-    }
-  }); // DELETE NOTE
-
-  app.delete("/notes/:id", async (req, res) => {
-    const {
-      id
-    } = req.params;
-    const noteToDelete = await _NoteModel.default.findById(id);
-
-    if (!noteToDelete) {
-      res.send("NOTE NOT FOUND");
-      return;
-    }
-
-    try {
-      await _NoteModel.default.deleteOne({
-        '_id': id
-      });
-      res.send('Note is Deleted');
-    } catch (error) {
-      res.send(error.message);
-      console.log("Erron deleting note");
     }
   });
 };
