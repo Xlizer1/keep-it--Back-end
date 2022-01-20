@@ -16,7 +16,6 @@ export default class NotesArea extends Component {
             <div className='note-area'>
                 <div className='container'>
                     <NoteInput updateParent={updateUser}/>
-                    {/* <NoteInput/> */}
                     <NoteGrid notes = {this.props.notes} updateDelete={updateDelete}/>
                 </div>
             </div>

@@ -8,8 +8,7 @@ export default class Note extends Component {
         }
         return (
             <div className='note'>
-                {/* <img src={URL.createObjectURL(this.props.img)} alt="note_img" className='note__img'/> */}
-                <img  alt="note_img" className='note__img'/>
+                <img src={URL.createObjectURL(this.props.img)} alt="note_img" className='note__img'/>
                 <div className='note__text'>
                     <h3>{this.props.title}</h3>
                     <p>{this.props.content}</p>

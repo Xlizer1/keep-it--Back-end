@@ -14,11 +14,11 @@ const start = async () => {
 
       const app = express();
 
-      app.use(express.urlencoded({extended: false}));
       app.use(express.json())
 
       console.log("connected to the DB");
 
+      app.use(express.urlencoded({extended: false}));
 
       app.use(cors());
 

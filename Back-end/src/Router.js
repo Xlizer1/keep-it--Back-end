@@ -2,21 +2,16 @@ import Joi from 'joi'
 import { hashPassword } from './Helper/Helper.js'
 import jwt from 'jsonwebtoken'
 import UserModel from './models/UserModel'
-import NoteModel from './models/NoteModel'
-import cors from "cors"
+import PostModel from './models/PostModel'
 
 const setupRoutes = (app) => {
-   app.use(cors(
-      { origin: '*' ,
-      methods: ['GET', 'POST', 'PUT', 'DELETE'],
-      allowedHeaders: ['Content-Type']}))
-   // GET NOTES
-   app.get('/notes', async(req, res) => {
+   
+   app.get('/posts', async(req, res) => {
 
       try {
-         const notes = await NoteModel.find({});
+         const posts = await PostModel.find({});
          
-         return res.json(notes);
+         return res.json(posts);
          
       } catch (error) {
 
@@ -25,7 +20,7 @@ const setupRoutes = (app) => {
       }
 
    });
-   // REGISTER NEW USER
+
    app.post('/user/register', async (req,res) => {
       const { name, email, password } = req.body;
 
@@ -68,7 +63,7 @@ const setupRoutes = (app) => {
    });
 
    app.get('*', (req, res) => res.send("URL Not Found"));
-   // LOGIN USER
+   
    app.post('/user/login', async (req, res) => {
       const {email, password} = req.body;
          
@@ -87,39 +82,24 @@ const setupRoutes = (app) => {
          }
       }
    });
-   // ADD NEW NOTE
-   app.post('/note/new', async (req,res) => {
-      const { title, content } = req.body;
+
+   app.post('/post/new', async (req,res) => {
+      const { title, description } = req.body;
+
       try {
-         const newNote = new NoteModel({
+         const newPost = new PostModel({
             title,
-            content,
+            description,
          });
 
-         await newNote.save();
+         await newPost.save();
 
-         res.send(newNote);
+         res.send(newPost);
 
       } catch (error){
          res.send(error.message);
       }
    });
-   // DELETE NOTE
-   app.delete("/notes/:id",async(req,res)=>{
-      const {id} = req.params;
-      const noteToDelete = await NoteModel.findById(id);
-      if (!noteToDelete) {
-         res.send("NOTE NOT FOUND");
-         return
-      }
-      try {
-         await NoteModel.deleteOne({'_id':id});
-         res.send('Note is Deleted')
-      } catch (error) {
-         res.send(error.message);
-         console.log("Erron deleting note");
-      }
-   })
 }
 
 export default setupRoutes;
