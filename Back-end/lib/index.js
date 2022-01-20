@@ -21,11 +21,11 @@ const start = async () => {
       useUnifiedTopology: true
     });
     const app = (0, _express.default)();
-    app.use(_express.default.json());
-    console.log("connected to the DB");
     app.use(_express.default.urlencoded({
       extended: false
     }));
+    app.use(_express.default.json());
+    console.log("connected to the DB");
     app.use((0, _cors.default)());
     console.log("app is created, lets setup routes");
     (0, _Router.default)(app);
