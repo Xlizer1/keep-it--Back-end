@@ -22,10 +22,31 @@ var _PostModel = _interopRequireDefault(require("./models/PostModel"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const setupRoutes = app => {
-  app.get('/posts', async (req, res) => {
+  app.get('/user', async (req, res) => {
+    try {
+      const token = req.headers.authorization;
+
+      if (!token) {
+        res.statusCode = 401;
+        res.send('You do not have Permisson!!!');
+      }
+
+      const decodedToken = _jsonwebtoken.default.decode(token);
+
+      const user = await _UserModel.default.findById(decodedToken.sub);
+
+      if (!user) {
+        res.statusCode = 401;
+        res.send('You do not have Permisson!!!');
+      }
+    } catch (error) {
+      res.statusCode = 401;
+      console.log(error);
+    }
+
     try {
       const posts = await _PostModel.default.find({});
-      return res.json(posts);
+      return res.send(posts);
     } catch (error) {
       res.statusCode = 500;
       console.log(error);
@@ -92,9 +113,13 @@ const setupRoutes = app => {
         const token = _jsonwebtoken.default.sign({
           sub: user._id
         }, user.salt, {
-          expiresIn: 30
+          expiresIn: 30000
         });
 
+        res.cookie('Auth', token, {
+          maxAge: 9000,
+          httpOnly: true
+        });
         res.send(token);
       } else {
         res.statusCode = 403;
@@ -102,7 +127,7 @@ const setupRoutes = app => {
       }
     }
   });
-  app.post('/post/new', async (req, res) => {
+  app.post('/user/new', async (req, res) => {
     const {
       title,
       description

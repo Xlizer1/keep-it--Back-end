@@ -5,21 +5,37 @@ import UserModel from './models/UserModel'
 import PostModel from './models/PostModel'
 
 const setupRoutes = (app) => {
-   
-   app.get('/posts', async(req, res) => {
 
+   app.get('/user', async (req, res) => {
+      try {
+
+         const token = req.headers.authorization
+
+         if(!token){
+            res.statusCode = 401;
+            res.send('You do not have Permisson!!!')
+         }
+
+         const decodedToken = jwt.decode(token);
+
+         const user = await UserModel.findById(decodedToken.sub);
+
+         if(!user){
+            res.statusCode = 401;
+            res.send('You do not have Permisson!!!')
+         }
+      } catch (error) {
+            res.statusCode = 401;
+            console.log(error);
+      }
       try {
          const posts = await PostModel.find({});
-         
-         return res.json(posts);
-         
+         return res.send(posts);
       } catch (error) {
-
          res.statusCode = 500;
          console.log(error);
       }
-
-   });
+   })
 
    app.post('/user/register', async (req,res) => {
       const { name, email, password } = req.body;
@@ -63,10 +79,10 @@ const setupRoutes = (app) => {
    });
 
    app.get('*', (req, res) => res.send("URL Not Found"));
-   
+
    app.post('/user/login', async (req, res) => {
       const {email, password} = req.body;
-         
+       
       const user = await UserModel.findOne({email});
 
       if(!user){
@@ -74,7 +90,10 @@ const setupRoutes = (app) => {
          res.send('User Not Found!!!')
       } else {
          if(user.password === hashPassword(password)) {
-            const token = jwt.sign({sub: user._id}, user.salt, {expiresIn: 30})
+            const token = jwt.sign({sub: user._id}, user.salt, {expiresIn: 30000})
+            
+            res.cookie('Auth', token, {maxAge: 9000, httpOnly: true})
+            
             res.send(token)
          } else {
             res.statusCode = 403;
@@ -83,7 +102,7 @@ const setupRoutes = (app) => {
       }
    });
 
-   app.post('/post/new', async (req,res) => {
+   app.post('/user/new', async (req,res) => {
       const { title, description } = req.body;
 
       try {

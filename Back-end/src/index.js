@@ -1,8 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import setupRoutes from './Router';
-import bodyParser from 'body-parser';
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 
 const start = async () => {
 
@@ -14,7 +14,9 @@ const start = async () => {
 
       const app = express();
 
-      app.use(express.json())
+      app.use(cookieParser());
+
+      app.use(express.json());
 
       console.log("connected to the DB");
 

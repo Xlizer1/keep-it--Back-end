@@ -1,12 +1,29 @@
+import axios from 'axios'
 import React, { Component} from 'react'
 import Header from '../components/Header'
 import NotesArea from '../components/NotesArea'
-import POST_URI from '../components/POST_URI'
+import LIST_URI from '../components/LIST_URI'
 
 export default class User extends Component {
     state={
         notes:[],
     }
+
+    componentDidMount() {
+        this.dataBase()
+    }
+
+    dataBase = () => {
+
+        const token = localStorage.getItem('token')
+
+        axios.get(LIST_URI, {
+            headers: {
+                Authorization: token
+            }
+        })
+    }
+    
     render() {
     //1 - ===== Add new note
     const addNote= (newNote)=> {

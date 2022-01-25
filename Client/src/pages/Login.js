@@ -6,10 +6,11 @@ import hero from "../img/undraw_uploading_re_okvh.svg"
 import Login_URI from '../components/Login_URI'
 import axios from 'axios'
 
-const Login = () => {
+
+const Login = (res) => {
     const [ user, setUser] = useState({
         email:"",
-        password:""
+        password:"",
     })
 
     const handleChange = e => {
@@ -19,11 +20,18 @@ const Login = () => {
         console.log(newUser);
     }
 
-    const login = () => {
+    const login = (event) => {
+        event.preventDefault()
+
         axios.post(Login_URI, user)
         .then( res => {
             if(res.status === 200){
-                window.location.assign('/user');
+
+                const token = res.data
+
+                localStorage.setItem("token", token)
+
+                window.location.assign(`/user/${token}`);
             }
         })
     }
