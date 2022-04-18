@@ -14,6 +14,7 @@ export default class App extends Component {
             <Route path="/" element={<Login/>} />
             <Route path="/register" element={<Register/>} />
             <Route path="/user/:token" element={<User/>} />
+            <Route path="/user/:token" element={<User/>} />
           </Routes>
         </BrowserRouter>
       </div>
