@@ -1,20 +1,33 @@
-import React, { Component } from 'react'
+import axios from 'axios'
+import React from 'react'
 
-export default class Note extends Component {
-    
-    render(props) {
-        const handleDelete = ()=> {
-            this.props.updateDelete(this.props.id)
+ const Note = ({ id, desc, title, img}) => {
+    const handelDelete = async() =>{
+        const config = {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            }
         }
-        return (
-            <div className='note'>
-                <img src={URL.createObjectURL(this.props.img)} alt="note_img" className='note__img'/>
-                <div className='note__text'>
-                    <h3>{this.props.title}</h3>
-                    <p>{this.props.content}</p>
-                </div>
-                <div className="note__delete" onClick={handleDelete}><i className="far fa-trash-alt"></i></div>
-            </div>
-        )
+
+        await axios.delete(`http://localhost:4000/post/delete/${id}`, config).then((res) => {
+          if(res.status === 200){
+            window.location.reload();
+          } else {
+            console.log(res);
+          }
+        })
     }
+
+    return (
+        <div className='note' key={id}>
+            <img src={img} alt="note_img" className='note__img'/>
+            <div className='note__text'>
+                <h3>{title}</h3>
+                <p>{desc}</p>
+            </div>
+            <div className="note__delete" onClick={handelDelete}><i className="far fa-trash-alt"></i></div>
+        </div>
+    )
 }
+
+export default Note;

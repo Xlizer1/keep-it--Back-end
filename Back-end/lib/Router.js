@@ -7,8 +7,6 @@ exports.default = void 0;
 
 require("core-js/modules/es.promise.js");
 
-require("core-js/modules/es.symbol.description.js");
-
 var _joi = _interopRequireDefault(require("joi"));
 
 var _Helper = require("./Helper/Helper.js");
@@ -113,7 +111,7 @@ const setupRoutes = app => {
         const token = _jsonwebtoken.default.sign({
           sub: user._id
         }, user.salt, {
-          expiresIn: 30000
+          expiresIn: 300000
         });
 
         res.cookie('Auth', token, {
@@ -130,16 +128,55 @@ const setupRoutes = app => {
   app.post('/user/new', async (req, res) => {
     const {
       title,
-      description
+      desc,
+      image
     } = req.body;
 
     try {
       const newPost = new _PostModel.default({
         title,
-        description
+        desc,
+        image
       });
       await newPost.save();
-      res.send(newPost);
+      res.send('added');
+    } catch (error) {
+      res.send(error.message);
+    }
+  });
+  app.delete("/post/delete/:id", async (req, res) => {
+    const token = req.headers.authorization;
+
+    try {
+      if (!token) {
+        res.statusCode = 401;
+        res.send("You Have No Permisson !!!");
+      } else {
+        const decodedToken = _jsonwebtoken.default.decode(token);
+
+        const user = await _UserModel.default.findById(decodedToken.sub);
+
+        _jsonwebtoken.default.verify(token, user.salt);
+
+        if (!user) {
+          res.statusCode = 401;
+          res.send("You Have No Permisson !!!");
+        } else {
+          const id = req.params.id;
+          const post = await _PostModel.default.findById(id);
+
+          if (!post) {
+            res.statusCode = 404;
+            res.send('post Not Found!!!');
+          } else {
+            req.statusCode = 200;
+            res.send("post ".concat(post.title, " deleted"));
+            return _PostModel.default.deleteOne({
+              _id: id
+            });
+          }
+        }
+      }
     } catch (error) {
       res.send(error.message);
     }

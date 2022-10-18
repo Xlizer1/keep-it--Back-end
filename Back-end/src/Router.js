@@ -9,7 +9,7 @@ const setupRoutes = (app) => {
    app.get('/user', async (req, res) => {
       try {
 
-         const token = req.headers.authorization
+         const token = req.headers.authorization;
 
          if(!token){
             res.statusCode = 401;
@@ -90,7 +90,7 @@ const setupRoutes = (app) => {
          res.send('User Not Found!!!')
       } else {
          if(user.password === hashPassword(password)) {
-            const token = jwt.sign({sub: user._id}, user.salt, {expiresIn: 30000})
+            const token = jwt.sign({sub: user._id}, user.salt, {expiresIn: 300000})
             
             res.cookie('Auth', token, {maxAge: 9000, httpOnly: true})
             
@@ -103,22 +103,60 @@ const setupRoutes = (app) => {
    });
 
    app.post('/user/new', async (req,res) => {
-      const { title, description } = req.body;
+      const { title, desc, image } = req.body;
 
       try {
          const newPost = new PostModel({
             title,
-            description,
+            desc,
+            image
          });
 
          await newPost.save();
 
-         res.send(newPost);
+         res.send('added');
 
       } catch (error){
          res.send(error.message);
       }
    });
+
+   app.delete("/post/delete/:id", async (req, res) => {
+      const token = req.headers.authorization;
+
+      try {
+        if (!token) {
+          res.statusCode = 401;
+          res.send("You Have No Permisson !!!");
+
+        } else {
+          const decodedToken = jwt.decode(token);
+
+          const user = await UserModel.findById(decodedToken.sub);
+
+          jwt.verify(token, user.salt);
+
+          if (!user) {
+            res.statusCode = 401;
+            res.send("You Have No Permisson !!!");
+          } else {
+            const id = req.params.id;
+            const post = await PostModel.findById(id);
+            if(!post){
+                res.statusCode = 404;
+                res.send('post Not Found!!!')
+                } else {
+                  req.statusCode = 200;
+                  res.send(`post ${post.title} deleted`);
+                  return PostModel.deleteOne({ _id: id });
+                }
+          }
+        }
+      } catch (error) {
+        res.send(error.message);
+      }
+    });
+
 }
 
 export default setupRoutes;

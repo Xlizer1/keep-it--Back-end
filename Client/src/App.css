@@ -80,6 +80,13 @@ main{
 }
 
 /* *** Register img *** */
+.plus{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 20px;
+}
 
 .register__img{
     /* border: solid 1px green; */
@@ -261,49 +268,74 @@ nav a .logo img{
     border: none;
     outline: none;
 }
+
 #title{
     padding: 0.2rem;
     width: 100%;
+    height: 40px;
 }
+
 #title::placeholder{
-    font-size: 1rem;
+    position: absolute;
+    font-size: 1.25rem;
+    top: 10px;
 }
+
 #note-content{
     padding:0.2rem;
     border: none;
     outline: none;
     resize: none;
+    width: 280px;
+    height: 70px;
 }
+
 #note-content::placeholder{
     color: rgba(51, 51, 51, 0.37);
-    font-size: 1rem;
+    font-size: 1.5rem;
+    padding: 0 50px 0;
 }
+
 .note-actions{
     text-align: right;
+    position: relative;
 }
+
 .note-actions button{
     outline: none;
     border:none;
-    padding:5px;
     cursor: pointer;
-    width: 20px;
-    height: 20px;
+    width: 35px;
+    height: 35px;
     position: relative;
     border-radius: 3px;
 }
+
 .note-actions button i{
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
 }
+
+label{
+    position: absolute;
+    top: 53%;
+    left: 75%;
+    transform: translate(-50%,-50%);
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: rgb(209, 209, 209);
+    border-radius: 3px;
+}
 .img-icon{
     margin-right: 7px;
-    /* cursor: pointer; */
+    cursor: pointer;
 }
 .add-icon{
     background-color: #FF6A3D;
     color: white;
+    padding: 5px 10px;
 }
 /* ###### Note ###### */
 .note{
@@ -338,12 +370,15 @@ nav a .logo img{
 .note__delete i:hover{
     color: rgb(192, 8, 8);
 }
+
 /* ######## NOTE GRID ######### */
+
 .note-grid{
     display: grid;
     grid-template-columns: repeat(auto-fill,minmax(200px,300px));
     gap: 0.5rem;
 }
+
 .upld-img{
     width:100px
 }

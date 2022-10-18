@@ -31,7 +31,7 @@ const Login = (res) => {
 
                 localStorage.setItem("token", token)
 
-                window.location.assign(`/user/${token}`);
+                window.location.assign("/home");
             }
         })
     }
